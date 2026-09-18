@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WinDrawWin Punters — Weekly Football Tips</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pitch-900:#0F3D2E;
+    --pitch-700:#1F5D42;
+    --chalk-100:#F5F3ED;
+    --chalk-050:#FBFAF6;
+    --ink-900:#12181B;
+    --ink-700:#3B4A45;
+    --floodlight-400:#F2A93B;
+    --score-600:#C6432B;
+
+    --bg:var(--chalk-050);
+    --bg-elevated:#FFFFFF;
+    --text:var(--ink-900);
+    --text-muted:var(--ink-700);
+    --border:#DFDAD0;
+    --nav-bg:rgba(251,250,246,0.92);
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0B1210;
+      --bg-elevated:#131C19;
+      --text:var(--chalk-100);
+      --text-muted:#AEBDB6;
+      --border:#233531;
+      --nav-bg:rgba(11,18,16,0.9);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B1210;
+    --bg-elevated:#131C19;
+    --text:var(--chalk-100);
+    --text-muted:#AEBDB6;
+    --border:#233531;
+    --nav-bg:rgba(11,18,16,0.9);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', -apple-system, sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 24px;}
+  h1,h2,h3{font-family:'Oswald', 'Inter', sans-serif; font-weight:600; letter-spacing:0.01em; line-height:1.08;}
+  h2{font-size:clamp(1.7rem, 3.4vw, 2.5rem);}
+  h3{font-size:1.15rem;}
+  p{max-width:62ch;}
+  .muted{color:var(--text-muted);}
+
+  /* ---------- Nav ---------- */
+  header{
+    position:sticky; top:0; z-index:40;
+    background:var(--nav-bg);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  nav{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1120px; margin:0 auto;}
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Oswald',sans-serif; font-weight:700; font-size:1.15rem;}
+  .brand-mark{
+    width:32px; height:32px; border-radius:50%;
+    background:conic-gradient(from 20deg, var(--pitch-700), var(--floodlight-400), var(--pitch-700));
+    display:flex; align-items:center; justify-content:center;
+    color:var(--chalk-050); font-size:0.75rem; font-weight:700;
+  }
+  .navlinks{display:flex; gap:28px; font-size:0.95rem;}
+  .navlinks a{text-decoration:none; color:var(--text-muted); transition:color .15s;}
+  .navlinks a:hover{color:var(--text);}
+  .nav-cta{
+    background:var(--floodlight-400); color:var(--ink-900);
+    padding:9px 18px; border-radius:4px; font-weight:600; font-size:0.9rem;
+    text-decoration:none; white-space:nowrap;
+  }
+  @media (max-width:760px){ .navlinks{display:none;} }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    background:linear-gradient(160deg, var(--pitch-900) 0%, #0A2A20 100%);
+    color:var(--chalk-100);
+    padding:72px 0 96px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 64px),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 64px);
+    pointer-events:none;
+  }
+  .hero-inner{
+    position:relative; z-index:1;
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:center;
+  }
+  @media (max-width:860px){ .hero-inner{grid-template-columns:1fr;} }
+  .hero-eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:0.85rem; color:var(--floodlight-400); font-weight:600;
+    margin-bottom:18px;
+  }
+  .hero-eyebrow::before{content:"●"; font-size:0.6rem;}
+  .hero h1{font-size:clamp(2.3rem, 5vw, 3.4rem); margin-bottom:20px;}
+  .hero h1 em{font-style:normal; color:var(--floodlight-400);}
+  .hero p.lead{font-size:1.1rem; color:#D6E3DC; max-width:46ch; margin-bottom:32px;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:36px;}
+  .btn{
+    display:inline-block; padding:13px 26px; border-radius:4px;
+    font-weight:600; font-size:0.95rem; text-decoration:none; cursor:pointer; border:none;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--floodlight-400); color:var(--ink-900);}
+  .btn-ghost{background:transparent; color:var(--chalk-100); border:1px solid rgba(255,255,255,0.35);}
+  .hero-stats{display:flex; gap:32px;}
+  .hero-stat .num{font-family:'Oswald',sans-serif; font-size:1.8rem; font-weight:700; color:var(--floodlight-400);}
+  .hero-stat .lbl{font-size:0.82rem; color:#B6C7BE;}
+
+  /* ---------- Slip card ---------- */
+  .slip{
+    background:var(--chalk-050); color:var(--ink-900);
+    border-radius:6px; padding:26px 24px;
+    box-shadow:0 24px 50px -18px rgba(0,0,0,0.55);
+    position:relative;
+  }
+  .slip-head{display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px dashed var(--border); padding-bottom:14px; margin-bottom:14px;}
+  .slip-head .tag{font-family:'Oswald',sans-serif; font-weight:600; font-size:0.95rem;}
+  .slip-head .id{font-size:0.75rem; color:var(--text-muted); font-variant-numeric:tabular-nums;}
+  .slip-row{display:flex; justify-content:space-between; padding:9px 0; font-size:0.92rem; border-bottom:1px solid var(--border);}
+  .slip-row:last-of-type{border-bottom:none;}
+  .slip-row .odds{font-weight:600; color:var(--pitch-700);}
+  .slip-foot{display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:14px; border-top:1px dashed var(--border);}
+  .slip-foot .total-lbl{font-size:0.8rem; color:var(--text-muted);}
+  .slip-foot .total-num{font-family:'Oswald',sans-serif; font-size:1.5rem; font-weight:700;}
+  .slip-note{font-size:0.78rem; color:var(--text-muted); margin-top:10px;}
+
+  /* ---------- Section base ---------- */
+  section{padding:80px 0;}
+  .section-head{max-width:640px; margin-bottom:48px;}
+  .section-head .kicker{font-size:0.85rem; color:var(--pitch-700); font-weight:600; margin-bottom:10px;}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .section-head .kicker{color:var(--floodlight-400);} }
+  :root[data-theme="dark"] .section-head .kicker{color:var(--floodlight-400);}
+
+  /* ---------- Markets grid ---------- */
+  .markets{display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr)); gap:2px; background:var(--border); border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+  .market{background:var(--bg-elevated); padding:26px 22px;}
+  .market .mk-name{font-family:'Oswald',sans-serif; font-weight:600; font-size:1.05rem; margin-bottom:8px;}
+  .market p{font-size:0.9rem; color:var(--text-muted);}
+
+  /* ---------- Pricing (ticket cards) ---------- */
+  .pricing-section{background:var(--pitch-900); color:var(--chalk-100);}
+  .pricing-section .section-head .kicker{color:var(--floodlight-400);}
+  .pricing-section h2{color:var(--chalk-050);}
+  .pricing-section p.sub{color:#C7D8CF; max-width:56ch;}
+  .tiers{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:44px;}
+  @media (max-width:860px){ .tiers{grid-template-columns:1fr; max-width:400px;} }
+  .ticket{
+    background:var(--chalk-050); color:var(--ink-900);
+    border-radius:8px; position:relative;
+    padding:30px 26px 26px;
+    display:flex; flex-direction:column;
+  }
+  .ticket::before, .ticket::after{
+    content:""; position:absolute; width:22px; height:22px; border-radius:50%;
+    background:var(--pitch-900); left:50%; transform:translateX(-50%);
+  }
+  .ticket::before{top:-11px;}
+  .ticket::after{bottom:-11px;}
+  .ticket .perf{
+    position:absolute; left:0; right:0; top:calc(50% - 1px);
+    border-top:2px dashed var(--border);
+  }
+  .ticket-top{padding-bottom:24px;}
+  .ticket-bottom{padding-top:24px; flex:1; display:flex; flex-direction:column;}
+  .ticket .plan{font-family:'Oswald',sans-serif; font-weight:700; font-size:1.3rem;}
+  .ticket .price{font-family:'Oswald',sans-serif; font-size:2.1rem; font-weight:700; margin:10px 0 2px;}
+  .ticket .price span{font-size:0.95rem; font-weight:500; color:var(--text-muted);}
+  .ticket .desc{font-size:0.88rem; color:var(--text-muted); margin-bottom:0;}
+  .ticket ul{list-style:none; margin:0 0 22px; flex:1;}
+  .ticket li{font-size:0.88rem; padding:6px 0; display:flex; gap:8px;}
+  .ticket li::before{content:"✓"; color:var(--pitch-700); font-weight:700;}
+  .ticket.featured{outline:2px solid var(--floodlight-400); transform:translateY(-6px);}
+  .ticket .badge{
+    position:absolute; top:16px; right:16px; background:var(--floodlight-400); color:var(--ink-900);
+    font-size:0.7rem; font-weight:700; padding:4px 9px; border-radius:3px; letter-spacing:0.03em;
+  }
+  .ticket .btn{width:100%; text-align:center;}
+  .pay-note{margin-top:36px; font-size:0.85rem; color:#B6C7BE; display:flex; gap:18px; flex-wrap:wrap; align-items:center;}
+  .pay-note .pill{border:1px solid rgba(255,255,255,0.25); border-radius:20px; padding:5px 12px; display:inline-flex; align-items:center; gap:6px;}
+
+  /* ---------- How it works ---------- */
+  .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:28px; counter-reset:step;}
+  @media (max-width:860px){ .steps{grid-template-columns:1fr 1fr;} }
+  @media (max-width:520px){ .steps{grid-template-columns:1fr;} }
+  .step{position:relative; padding-left:2px;}
+  .step .stepnum{
+    font-family:'Oswald',sans-serif; font-size:2rem; font-weight:700;
+    color:var(--pitch-700); margin-bottom:10px;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .step .stepnum{color:var(--floodlight-400);} }
+  :root[data-theme="dark"] .step .stepnum{color:var(--floodlight-400);}
+  .step h3{margin-bottom:6px;}
+  .step p{font-size:0.9rem; color:var(--text-muted);}
+
+  /* ---------- Track record ---------- */
+  .record-grid{display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:start;}
+  @media (max-width:820px){ .record-grid{grid-template-columns:1fr;} }
+  .scoreboard{
+    background:var(--pitch-900); color:var(--chalk-100);
+    border-radius:8px; padding:26px; display:grid; grid-template-columns:repeat(3,1fr); gap:0;
+  }
+  .scoreboard .cell{padding:16px 8px; text-align:center; border-right:1px solid rgba(255,255,255,0.12);}
+  .scoreboard .cell:last-child{border-right:none;}
+  .scoreboard .cell .num{font-family:'Oswald',sans-serif; font-size:1.6rem; font-weight:700; color:var(--floodlight-400);}
+  .scoreboard .cell .lbl{font-size:0.72rem; color:#B6C7BE; margin-top:4px;}
+  .quote-list{display:flex; flex-direction:column; gap:22px;}
+  .quote{border-left:3px solid var(--pitch-700); padding-left:16px;}
+  .quote p{font-size:0.95rem; margin-bottom:6px;}
+  .quote .who{font-size:0.8rem; color:var(--text-muted);}
+
+  /* ---------- FAQ ---------- */
+  .faq-item{border-bottom:1px solid var(--border); padding:18px 0;}
+  .faq-item summary{cursor:pointer; font-family:'Oswald',sans-serif; font-weight:600; font-size:1.02rem; list-style:none; display:flex; justify-content:space-between; align-items:center;}
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{content:"+"; font-size:1.3rem; color:var(--text-muted); font-weight:400;}
+  .faq-item[open] summary::after{content:"–";}
+  .faq-item p{margin-top:10px; font-size:0.92rem; color:var(--text-muted);}
+
+  /* ---------- CTA band ---------- */
+  .cta-band{
+    background:linear-gradient(120deg, var(--pitch-700), var(--pitch-900));
+    color:var(--chalk-100); border-radius:12px; padding:48px 40px;
+    display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap;
+  }
+  .cta-band h2{color:var(--chalk-050); margin-bottom:6px;}
+  .cta-band p{color:#C7D8CF;}
+
+  /* ---------- Responsible gambling ---------- */
+  .rg{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:8px;
+    padding:24px; display:flex; gap:16px; align-items:flex-start;
+  }
+  .rg .icon{font-size:1.4rem;}
+  .rg p{font-size:0.85rem; color:var(--text-muted); margin-bottom:6px;}
+
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--border); padding:48px 0 32px;}
+  .foot-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:32px; margin-bottom:36px;}
+  @media (max-width:700px){ .foot-grid{grid-template-columns:1fr;} }
+  footer h4{font-family:'Oswald',sans-serif; font-size:0.95rem; margin-bottom:14px;}
+  footer ul{list-style:none; display:flex; flex-direction:column; gap:8px;}
+  footer a{text-decoration:none; color:var(--text-muted); font-size:0.9rem;}
+  footer a:hover{color:var(--text);}
+  .foot-bottom{display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:0.8rem; color:var(--text-muted); padding-top:20px; border-top:1px solid var(--border);}
+
+  ::selection{background:var(--floodlight-400); color:var(--ink-900);}
+  :focus-visible{outline:2px solid var(--floodlight-400); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){ *{scroll-behavior:auto !important; transition:none !important;} }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="brand"><span class="brand-mark">WDW</span> WinDrawWin Punters</div>
+    <div class="navlinks">
+      <a href="#markets">Tips</a>
+      <a href="#pricing">Plans</a>
+      <a href="#how">How it works</a>
+      <a href="#record">Track record</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="https://t.me/windrawwinpunters" target="_blank" rel="noopener" class="nav-cta">Join Telegram</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div>
+      <div class="hero-eyebrow">Weekend slate live now</div>
+      <h1>Bet with a plan,<br>not a hunch. <em>Every matchday.</em></h1>
+      <p class="lead">WinDrawWin Punters turns hours of form study, lineup news, and market movement into a short list of tips you can actually act on — before kickoff, every week.</p>
+      <div class="hero-actions">
+        <a href="https://t.me/windrawwinpunters" target="_blank" rel="noopener" class="btn btn-primary">Join our Telegram</a>
+        <a href="#pricing" class="btn btn-ghost">See weekly plans</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num">1,240+</div><div class="lbl">Tips tracked since launch</div></div>
+        <div class="hero-stat"><div class="num">5</div><div class="lbl">Leagues covered weekly</div></div>
+        <div class="hero-stat"><div class="num">18+</div><div class="lbl">Subscribers must be of legal age</div></div>
+      </div>
+    </div>
+    <div class="slip">
+      <div class="slip-head">
+        <span class="tag">Sample Banker Tip</span>
+        <span class="id">Matchday 07</span>
+      </div>
+      <div class="slip-row"><span>Over 2.5 Goals</span><span class="odds">1.85</span></div>
+      <div class="slip-row"><span>Both Teams to Score</span><span class="odds">1.72</span></div>
+      <div class="slip-row"><span>Double Chance 1X</span><span class="odds">1.40</span></div>
+      <div class="slip-foot">
+        <div><div class="total-lbl">Combined odds</div><div class="total-num">4.42</div></div>
+        <a href="#pricing" class="btn btn-primary" style="padding:10px 18px;">Unlock full slip</a>
+      </div>
+      <div class="slip-note">Illustrative example — full fixtures and analysis are sent to subscribers before kickoff.</div>
+    </div>
+  </div>
+</section>
+
+<section id="markets">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">What we cover</div>
+      <h2>Markets we break down every week</h2>
+      <p class="muted">Each tip comes with the reasoning behind it — form, injuries, head-to-head record, and where the odds have moved — not just a pick.</p>
+    </div>
+    <div class="markets">
+      <div class="market"><div class="mk-name">Over/Under 2.5</div><p>Goal-expectancy reads built from attacking output and defensive shape over the last six matches.</p></div>
+      <div class="market"><div class="mk-name">Both Teams to Score</div><p>Matchups where both backlines have a habit of conceding, flagged from recent form.</p></div>
+      <div class="market"><div class="mk-name">Correct Score</div><p>Higher-risk, higher-reward picks for punters chasing bigger odds on a single result.</p></div>
+      <div class="market"><div class="mk-name">Bankers</div><p>One high-confidence single tip per matchday, reserved for our strongest read of the week.</p></div>
+      <div class="market"><div class="mk-name">Accumulators</div><p>Multi-leg slips built across the weekend slate for punters who like to stack value.</p></div>
+      <div class="market"><div class="mk-name">Late team news</div><p>Lineup and injury updates in the hours before kickoff, when they can change a tip.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section" id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Weekly plans</div>
+      <h2>Pick a plan, renew weekly</h2>
+      <p class="sub">Every plan renews each week so you're never locked into a bad run. Cancel or switch tiers any time before your next matchday.</p>
+    </div>
+    <div class="tiers">
+      <div class="ticket">
+        <div class="perf"></div>
+        <div class="ticket-top">
+          <div class="plan">Free</div>
+          <div class="price">KSh 0<span>/week</span></div>
+          <p class="desc">A taste of the analysis, no card required.</p>
+        </div>
+        <div class="ticket-bottom">
+          <ul>
+            <li>1 free tip per matchday</li>
+            <li>Public track record access</li>
+            <li>Weekly newsletter</li>
+          </ul>
+          <a href="https://t.me/windrawwinpunters" target="_blank" rel="noopener" class="btn btn-ghost" style="border:1px solid var(--border); color:var(--ink-900);">Join Telegram — Free</a>
+        </div>
+      </div>
+
+      <div class="ticket featured">
+        <span class="badge">Most popular</span>
+        <div class="perf"></div>
+        <div class="ticket-top">
+          <div class="plan">VIP</div>
+          <div class="price">KSh 500<span>/week</span></div>
+          <p class="desc">The full weekend slate, delivered before kickoff.</p>
+        </div>
+        <div class="ticket-bottom">
+          <ul>
+            <li>5–8 tips across the weekend slate</li>
+            <li>Bankers + accumulator of the week</li>
+            <li>Delivered in our Telegram channel</li>
+            <li>Late team-news alerts</li>
+          </ul>
+          <a href="#pay-details" class="btn btn-primary">Join VIP</a>
+        </div>
+      </div>
+
+      <div class="ticket">
+        <div class="perf"></div>
+        <div class="ticket-top">
+          <div class="plan">Premium</div>
+          <div class="price">KSh 1,000<span>/week</span></div>
+          <p class="desc">Everything in VIP, plus daily coverage and direct access.</p>
+        </div>
+        <div class="ticket-bottom">
+          <ul>
+            <li>Daily tips, not just weekends</li>
+            <li>Correct-score and midweek fixtures</li>
+            <li>Direct line for match-day questions</li>
+            <li>Early access to new markets</li>
+          </ul>
+          <a href="#pay-details" class="btn btn-ghost" style="border:1px solid rgba(255,255,255,0.35); color:var(--chalk-100);">Join Premium</a>
+        </div>
+      </div>
+    </div>
+    <div class="pay-note" id="pay-details">
+      <span>Pay by:</span>
+      <span class="pill">💳 PayPal: maryprintersandpublishers@gmail.com</span>
+      <span class="pill">📱 M-Pesa: 0796439927</span>
+    </div>
+    <p class="muted" style="color:#C7D8CF; font-size:0.82rem; margin-top:10px;">Weekly renewal — cancel any time before the next cycle. After paying, send your payment reference to confirm your tier and get added to the tips group.</p>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">How it works</div>
+      <h2>From sign-up to kickoff</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="stepnum">1</div><h3>Choose a plan</h3><p>Start Free or go straight to VIP or Premium based on how much of the slate you want.</p></div>
+      <div class="step"><div class="stepnum">2</div><h3>Pay via PayPal or M-Pesa</h3><p>Weekly billing, confirmed instantly — you'll get an active-week confirmation.</p></div>
+      <div class="step"><div class="stepnum">3</div><h3>Get your tips</h3><p>Tips land in our <a href="https://t.me/windrawwinpunters" target="_blank" rel="noopener" style="color:var(--pitch-700); text-decoration:underline;">Telegram channel</a> before kickoff, with the reasoning behind each pick.</p></div>
+      <div class="step"><div class="stepnum">4</div><h3>Renew or switch</h3><p>Each week is a fresh cycle — stay on your plan, upgrade, or step away, no long contracts.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="record">
+  <div class="wrap record-grid">
+    <div>
+      <div class="section-head" style="margin-bottom:24px;">
+        <div class="kicker">Track record</div>
+        <h2>Results, published weekly</h2>
+        <p class="muted">Every settled tip — win or lose — stays on the public record. No cherry-picking the good weeks.</p>
+      </div>
+      <div class="scoreboard">
+        <div class="cell"><div class="num">1,240</div><div class="lbl">Tips settled</div></div>
+        <div class="cell"><div class="num">4</div><div class="lbl">Seasons tracked</div></div>
+        <div class="cell"><div class="num">5</div><div class="lbl">Leagues covered</div></div>
+      </div>
+    </div>
+    <div class="quote-list">
+      <div class="quote"><p>"The reasoning behind each tip is what sold me — I'm not just copying a pick blind anymore."</p><div class="who">VIP subscriber, placeholder testimonial</div></div>
+      <div class="quote"><p>"Weekly billing means I'm never stuck paying for a plan I'm not using that week."</p><div class="who">Premium subscriber, placeholder testimonial</div></div>
+      <div class="quote"><p>"Late team-news alerts have saved me from a couple of bad bets already."</p><div class="who">VIP subscriber, placeholder testimonial</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap" style="max-width:760px;">
+    <div class="section-head">
+      <div class="kicker">FAQ</div>
+      <h2>Before you join</h2>
+    </div>
+    <details class="faq-item" open>
+      <summary>How many tips do I get each week?</summary>
+      <p>Free gives you one tip per matchday. VIP covers the full weekend slate with 5–8 tips plus a banker and an accumulator. Premium adds daily and midweek fixtures on top of that.</p>
+    </details>
+    <details class="faq-item">
+      <summary>How do I receive the tips?</summary>
+      <p>All tips are posted in our <a href="https://t.me/windrawwinpunters" target="_blank" rel="noopener" style="color:var(--pitch-700); text-decoration:underline;">Telegram channel</a> ahead of kickoff, along with the reasoning behind them. VIP and Premium tips are unlocked once your weekly payment is confirmed.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Can I cancel any time?</summary>
+      <p>Yes — plans bill weekly rather than locking you into a monthly or annual contract, so you can stop, pause, or switch tiers before the next cycle starts.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Are wins guaranteed?</summary>
+      <p>No. Tips are informed analysis, not certainties — football is unpredictable, and no tipster can guarantee a result. Always bet within your means.</p>
+    </details>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta-band" id="signup">
+      <div>
+        <h2>Ready for this week's slate?</h2>
+        <p>Join Free to see how we work, or go straight to VIP for the full weekend coverage.</p>
+      </div>
+      <div style="display:flex; gap:14px; flex-wrap:wrap;">
+        <a href="https://t.me/windrawwinpunters" target="_blank" rel="noopener" class="btn btn-primary">Join our Telegram</a>
+        <a href="#pricing" class="btn btn-ghost">Choose a plan</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="wrap">
+    <div class="rg">
+      <div class="icon">⚠️</div>
+      <div>
+        <p><strong style="color:var(--text);">18+ only. Gamble responsibly.</strong> Tips are informational and intended to support your own judgment, not a promise of profit. Betting carries financial risk — never stake more than you can afford to lose.</p>
+        <p>If gambling stops feeling fun or you're finding it hard to stop, free confidential support is available through BetKnowMore Kenya, GamCare (UK), or the National Council on Problem Gambling helpline in your region.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand" style="margin-bottom:12px;">
+          <span class="brand-mark">WDW</span> WinDrawWin Punters
+        </div>
+        <p class="muted" style="font-size:0.88rem;">Weekly football tips built on form, team news, and market movement — for punters who want the reasoning, not just the pick.</p>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="#markets">Tips we cover</a></li>
+          <li><a href="#pricing">Weekly plans</a></li>
+          <li><a href="#record">Track record</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="https://t.me/windrawwinpunters" target="_blank" rel="noopener">Telegram channel</a></li>
+          <li><a href="mailto:maryprintersandpublishers@gmail.com">maryprintersandpublishers@gmail.com</a></li>
+          <li>PayPal: maryprintersandpublishers@gmail.com</li>
+          <li>M-Pesa: 0796439927</li>
+          <li>Nairobi, Kenya</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 WinDrawWin Punters. For entertainment purposes — 18+ only.</span>
+      <span>Bet responsibly.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
